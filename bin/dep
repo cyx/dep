@@ -1,0 +1,67 @@
+#!/usr/bin/env ruby
+
+require_relative "../lib/dep"
+
+require "fileutils"
+require "clap"
+
+@list = Dep::List.new
+@prerelease = false
+FileUtils.touch(@list.path) unless File.exist?(@list.path)
+
+def add(name)
+  res = Gem::SpecFetcher.fetcher.fetch(Gem::Dependency.new(name), false, true, @prerelease)
+
+  abort("Unable to find #{name}") if res.empty?
+
+  spec = res[-1][0]
+  lib  = Dep::Lib.new(spec.name, spec.version)
+
+  @list.add(lib)
+  @list.save
+
+  puts "dep: added #{lib}"
+end
+
+def rm(name)
+  @list.remove(Dep::Lib.new(name))
+  @list.save
+
+  puts "dep: removed #{name}"
+end
+
+def check
+  if @list.missing_libraries.empty?
+    puts "dep: all cool"
+  else
+    puts "dep: the following libraries are missing"
+
+    @list.missing_libraries.each do |lib|
+      puts "  %s" % lib
+    end
+  end
+end
+
+def install
+  if @list.missing_libraries.empty?
+    abort("dep: nothing to install")
+  end
+
+  @list.missing_libraries.each do |lib|
+    run "gem install #{lib}"
+  end
+end
+
+def run(cmd)
+  puts "  #{cmd}"
+  `#{cmd}`
+end
+
+commands = Clap.run ARGV,
+  "--pre" => lambda { @prerelease = true }
+
+Clap.run commands,
+  "add" => method(:add),
+  "rm"  => method(:rm),
+  "install" => method(:install),
+  "check" => method(:check)
