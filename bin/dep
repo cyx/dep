@@ -5,7 +5,7 @@ require_relative "../lib/dep"
 require "fileutils"
 require "clap"
 
-help = File.read(File.expand_path("../README", File.dirname(__FILE__)))
+help = File.expand_path("../README", File.dirname(__FILE__))
 
 @list = Dep::List.new
 @prerelease = false
@@ -66,7 +66,7 @@ end
 
 commands = Clap.run ARGV,
   "--pre"  => lambda { @prerelease = true },
-  "--help" => lambda { abort(help) }
+  "--help" => lambda { exec "${PAGER:-less} #{help}" }
 
 Clap.run commands,
   "add" => method(:add),
