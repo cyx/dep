@@ -24,7 +24,7 @@ DESCRIPTION
           Installs all the missing dependencies for you. An important
           point here is that it simply does a `gem install` for each
           dependency you have. Dep assumes that you use some form of
-          andobxing like RVM or rbenv-gemset.
+          sandboxing like RVM or rbenv-gemset.
 
 
 INSTALLATION
