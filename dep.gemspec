@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name              = "dep"
-  s.version           = "0.0.1.rc1"
+  s.version           = "0.0.1.rc2"
   s.summary           = "Dependencies manager"
   s.description       = "Specify your project's dependencies in one file."
   s.authors           = ["Cyril David", "Michel Martens"]
