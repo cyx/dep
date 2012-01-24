@@ -51,6 +51,7 @@ def install
   end
 
   @list.missing_libraries.each do |lib|
+    run "gem uninstall --all --ignore-dependencies #{lib.name}"
     run "gem install #{lib}"
   end
 end
@@ -69,7 +70,7 @@ commands = Clap.run ARGV,
   "--help" => lambda { exec "${PAGER:-less} #{help}" }
 
 Clap.run commands,
-  "add" => method(:add),
-  "rm"  => method(:rm),
+  "add"     => method(:add),
+  "rm"      => method(:rm),
   "install" => method(:install),
-  "check" => method(:check)
+  "check"   => method(:check)
