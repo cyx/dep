@@ -52,7 +52,7 @@ def install
 
   @list.missing_libraries.each do |lib|
     run "gem uninstall --all --ignore-dependencies #{lib.name}"
-    run "gem install #{lib}"
+    run "gem install #{lib} --no-ri --no-rdoc"
   end
 end
 
