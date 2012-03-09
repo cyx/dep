@@ -42,6 +42,8 @@ def check
     @list.missing_libraries.each do |lib|
       puts "  %s" % lib
     end
+
+    exit(1)
   end
 end
 
