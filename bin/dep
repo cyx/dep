@@ -6,8 +6,12 @@ require "fileutils"
 require "clap"
 
 help = File.expand_path("../README", File.dirname(__FILE__))
+file = nil
 
-@list = Dep::List.new
+commands = Clap.run ARGV,
+  "-f"  => lambda { |f| file = f }
+
+@list = Dep::List.new(file || File.join(Dir.pwd, ".gems"))
 @prerelease = false
 
 FileUtils.touch(@list.path) unless File.exist?(@list.path)
@@ -63,11 +67,11 @@ def run(cmd)
   `#{cmd}`
 end
 
-if ARGV.empty?
+if commands.empty?
   check
 end
 
-commands = Clap.run ARGV,
+commands = Clap.run commands,
   "--pre"  => lambda { @prerelease = true },
   "--help" => lambda { exec "${PAGER:-less} #{help}" }
 
