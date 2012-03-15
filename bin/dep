@@ -17,6 +17,10 @@ commands = Clap.run ARGV,
 FileUtils.touch(@list.path) unless File.exist?(@list.path)
 
 def add(name)
+  if @list.find(name)
+    abort("already exists! Use `dep rm %s` first." % name)
+  end
+
   res = Gem::SpecFetcher.fetcher.fetch(Gem::Dependency.new(name), false, true, @prerelease)
 
   abort("Unable to find #{name}") if res.empty?
@@ -31,7 +35,15 @@ def add(name)
 end
 
 def rm(name)
-  @list.remove(Dep::Lib.new(name))
+  existing = @list.find(name)
+
+  abort("Unable to find %s" % name) unless existing
+
+  existing.dependencies.each do |lib|
+    run "gem uninstall --all --ignore-dependencies #{lib.name}"
+    @list.remove(lib)
+  end
+
   @list.save
 
   puts "dep: removed #{name}"
@@ -57,7 +69,6 @@ def install
   end
 
   @list.missing_libraries.each do |lib|
-    run "gem uninstall --all --ignore-dependencies #{lib.name}"
     run "gem install #{lib} --no-ri --no-rdoc"
   end
 end
@@ -79,4 +90,5 @@ Clap.run commands,
   "add"     => method(:add),
   "rm"      => method(:rm),
   "install" => method(:install),
-  "check"   => method(:check)
+  "check"   => method(:check),
+  "lock"    => method(:lock)

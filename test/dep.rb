@@ -45,9 +45,19 @@ scope do
   end
 
   test do |list|
+    cutest = Dep::Lib.new("cutest", "1.1.3")
+
+    list.exist?(cutest)
+    assert_equal cutest, list.find("cutest")
+  end
+
+  test do |list|
+    def list.abort(s)
+      $abort = s
+    end
+
     list.add(Dep::Lib.new("cutest", "2.0"))
 
-    assert ! list.libraries.include?(Dep::Lib.new("cutest", "1.1.3"))
-    assert list.libraries.include?(Dep::Lib.new("cutest", "2.0"))
+    assert_equal "cutest already exists", $abort
   end
 end
