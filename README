@@ -55,3 +55,6 @@ HISTORY
          is that that should already be handled by the package managing
          (typically rubygems).
       3. Whenever we add a new library, we add the latest version.
+
+      So after doing this workflow manually for a while, we decided to
+      build the simplest tool to aid is with our workflow.
