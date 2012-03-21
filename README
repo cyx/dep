@@ -16,10 +16,10 @@ DESCRIPTION
       add
           Fetches the latest version of the library in question
           and automatically adds it to your .gems file.
-    
+
       rm
           Simply removes the corresponding entry in your .gems file.
-  
+
       install
           Installs all the missing dependencies for you. An important
           point here is that it simply does a `gem install` for each
@@ -29,3 +29,29 @@ DESCRIPTION
 
 INSTALLATION
       $ gem install dep
+
+HISTORY
+      dep is actually more of a workflow than a tool. If you think about
+      package managers and the problem of dependencies, you can summarize
+      it into the following lines:
+
+      1. When you build an application which relies on 3rd party libraries,
+         it's best to explicitly declare the version numbers of these
+         libraries.
+
+      2. You can either bundle the specific library version together with
+         your application, or you can have a list of versions.
+
+      The fist approach is handled by vendoring the library. The second
+      approach typically is done using Bundler. But why do you need such
+      a complicated tool when all you need is simply listing version numbers?
+
+      We dissected what we were doing and eventually reached the following
+      workflow:
+
+      1. We maintain a .gems file for every application which lists the
+         libraries and the version numbers.
+      2. We omit dependencies of dependencies in that file, the reason being
+         is that that should already be handled by the package managing
+         (typically rubygems).
+      3. Whenever we add a new library, we add the latest version.
