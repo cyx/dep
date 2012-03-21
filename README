@@ -55,6 +55,35 @@ HISTORY
          is that that should already be handled by the package manager
          (typically rubygems).
       3. Whenever we add a new library, we add the latest version.
+      4. When we pull the latest changes, we want to be able to rapidly
+         check if the dependencies we have is up to date and matches what
+         we just pulled.
 
       So after doing this workflow manually for a while, we decided to
       build the simplest tool to aid us with our workflow.
+
+      The first point is handled implicitly by dep. You can also specify
+      a different file by doing dep -f.
+
+      The second point is more of an implementation detail. We thought about
+      doing dependencies, but then, why re-implement something that's already
+      done for you by rubygems?
+
+      The third point (and also the one which is most inconvenient), is
+      handled by dep add.
+
+      The manual workflow for that would be:
+
+      gem search -r "^ohm$" [--pre] # check and remember the version number
+      echo "ohm -v X.x.x" >> .gems
+
+      If you try doing that repeatedly, it will quickly become cumbersome.
+
+      The fourth and final point is handled by typing dep check or simply dep.
+      Practically speaking it's just:
+
+      git pull
+      dep
+
+      And that's it. The dep command typcially happens in 0.2 seconds which
+      is something we LOVE.
