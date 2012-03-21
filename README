@@ -33,7 +33,7 @@ INSTALLATION
 HISTORY
       dep is actually more of a workflow than a tool. If you think about
       package managers and the problem of dependencies, you can summarize
-      it into the following lines:
+      what you absolutely need from them in just two points:
 
       1. When you build an application which relies on 3rd party libraries,
          it's best to explicitly declare the version numbers of these
@@ -42,7 +42,7 @@ HISTORY
       2. You can either bundle the specific library version together with
          your application, or you can have a list of versions.
 
-      The fist approach is handled by vendoring the library. The second
+      The first approach is handled by vendoring the library. The second
       approach typically is done using Bundler. But why do you need such
       a complicated tool when all you need is simply listing version numbers?
 
@@ -52,9 +52,9 @@ HISTORY
       1. We maintain a .gems file for every application which lists the
          libraries and the version numbers.
       2. We omit dependencies of dependencies in that file, the reason being
-         is that that should already be handled by the package managing
+         is that that should already be handled by the package manager
          (typically rubygems).
       3. Whenever we add a new library, we add the latest version.
 
       So after doing this workflow manually for a while, we decided to
-      build the simplest tool to aid is with our workflow.
+      build the simplest tool to aid us with our workflow.
