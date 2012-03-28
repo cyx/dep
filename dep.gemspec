@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name              = "dep"
-  s.version           = "1.0.0.rc1"
+  s.version           = "1.0.0"
   s.summary           = "Dependencies manager"
   s.description       = "Specify your project's dependencies in one file."
   s.authors           = ["Cyril David", "Michel Martens"]
@@ -9,5 +9,5 @@ Gem::Specification.new do |s|
   s.files             = ["README", "bin/dep", "lib/dep.rb", "test/dep.rb"]
 
   s.executables.push("dep")
-  s.add_dependency("clap")
+  s.add_dependency("clap", "~> 0.0.2")
 end
