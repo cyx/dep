@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.description       = "Specify your project's dependencies in one file."
   s.authors           = ["Cyril David", "Michel Martens"]
   s.email             = ["cyx.ucron@gmail.com", "soveran@gmail.com"]
-  s.homepage          = "http://github.com/twpil/dep"
+  s.homepage          = "http://twpil.github.com/dep"
   s.files             = ["README.1", "bin/dep", "lib/dep.rb", "test/dep.rb"]
 
   s.executables.push("dep")
