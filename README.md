@@ -9,21 +9,22 @@ DEP(1) -- basic dependency tracking
     dep install
 
 ## DESCRIPTION
-      check
-          Checks that all dependencies are met.
 
-      add
-          Fetches the latest version of the library in question
-          and automatically adds it to your .gems file.
+   * check:
+     Checks that all dependencies are met.
 
-      rm
-          Simply removes the corresponding entry in your .gems file.
+   * add:
+     Fetches the latest version of the library in question
+     and automatically adds it to your .gems file.
 
-      install
-          Installs all the missing dependencies for you. An important
-          point here is that it simply does a `gem install` for each
-          dependency you have. Dep assumes that you use some form of
-          sandboxing like gs, RVM or rbenv-gemset.
+   * rm:
+     Simply removes the corresponding entry in your .gems file.
+
+   * install:
+     Installs all the missing dependencies for you. An important
+     point here is that it simply does a `gem install` for each
+     dependency you have. Dep assumes that you use some form of
+     sandboxing like gs, RVM or rbenv-gemset.
 
 
 ## INSTALLATION
@@ -85,5 +86,5 @@ git pull
 dep
 ```
 
-And that's it. The dep command typcially happens in 0.2 seconds which
+And that's it. The dep command typically happens in 0.2 seconds which
 is something we LOVE.
