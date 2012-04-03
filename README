@@ -85,5 +85,5 @@ HISTORY
       git pull
       dep
 
-      And that's it. The dep command typcially happens in 0.2 seconds which
+      And that's it. The dep command typically happens in 0.2 seconds which
       is something we LOVE.
