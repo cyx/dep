@@ -81,10 +81,8 @@ If you try doing that repeatedly, it will quickly become cumbersome.
 The fourth and final point is handled by typing dep check or simply dep.
 Practically speaking it's just:
 
-```
-git pull
-dep
-```
+    git pull
+    dep
 
 And that's it. The dep command typically happens in 0.2 seconds which
 is something we LOVE.
