@@ -9,5 +9,5 @@ Gem::Specification.new do |s|
   s.files             = ["README.1", "bin/dep", "lib/dep.rb", "test/dep.rb"]
 
   s.executables.push("dep")
-  s.add_dependency("clap", "~> 0.0.2")
+  s.add_dependency("clap", "~> 1.0.0")
 end
