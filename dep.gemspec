@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.authors           = ["Cyril David", "Michel Martens"]
   s.email             = ["cyx.ucron@gmail.com", "soveran@gmail.com"]
   s.homepage          = "http://twpil.github.com/dep"
-  s.files             = ["README.1", "bin/dep", "lib/dep.rb", "test/dep.rb"]
+  s.files             = ["README.1", "bin/dep", "lib/dep.rb", "test/dep.rb", "man/dep.1"]
 
   s.executables.push("dep")
   s.add_dependency("clap", "~> 0.0.2")
