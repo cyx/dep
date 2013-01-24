@@ -53,7 +53,8 @@ end
 
 def install
   if @list.missing_libraries.empty?
-    abort("dep: nothing to install")
+    puts "dep: nothing to install"
+    exit
   end
 
   @list.missing_libraries.each do |lib|
