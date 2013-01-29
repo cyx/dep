@@ -34,7 +34,7 @@ module Dep
 
   class Lib < Struct.new(:name, :version)
     def self.[](line)
-      if line =~ /^(\S+) -v (\S+)$/
+      if line.strip =~ /^(\S+) -v (\S+)$/
         return new($1, $2)
       else
         abort("Invalid requirement found: #{line}")
