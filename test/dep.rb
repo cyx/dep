@@ -12,7 +12,7 @@ scope do
   end
 
   test "availability of existing gem" do
-    lib = Dep::Lib.new("cutest", "1.1.3")
+    lib = Dep::Lib.new("cutest", "1.2.0")
     assert lib.available?
   end
 
@@ -35,7 +35,7 @@ scope do
 
   test do |list|
     lib1 = Dep::Lib.new("ohm-contrib", "1.0.rc1")
-    lib2 = Dep::Lib.new("cutest", "1.1.3")
+    lib2 = Dep::Lib.new("cutest", "1.2.0")
 
     assert list.libraries.include?(lib1)
     assert list.libraries.include?(lib2)
