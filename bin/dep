@@ -17,7 +17,15 @@ commands = Clap.run ARGV,
 FileUtils.touch(@list.path) unless File.exist?(@list.path)
 
 def add(name)
-  res = Gem::SpecFetcher.fetcher.fetch(Gem::Dependency.new(name), false, true, @prerelease)
+  dependency = Gem::Dependency.new(name)
+  fetcher = Gem::SpecFetcher.fetcher
+
+  if fetcher.respond_to?(:spec_for_dependency)
+    dependency.prerelease = @prerelease
+    res, _ = fetcher.spec_for_dependency(dependency)
+  else
+    res = fetcher.fetch(dependency, false, true, @prerelease)
+  end
 
   abort("Unable to find #{name}") if res.empty?
 
