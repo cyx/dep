@@ -123,16 +123,25 @@ module Dep
       puts "  #{cmd}"
       `#{cmd}`
     end
+
+    def self.abort
+      abort("error: dep --help for more info")
+    end
   end
 end
 
 module Kernel
 private
-  def on(flag)
+  def on(flag, &block)
     if index = ARGV.index(flag)
-      _, val = ARGV.delete_at(index), ARGV.delete_at(index)
+      _ = ARGV.delete_at(index)
 
-      yield val
+      case block.arity
+      when 1 then block.call(ARGV.delete_at(index))
+      when 0 then block.call
+      else
+        Dep::CLI.abort
+      end
     end
   end
 end
@@ -169,7 +178,7 @@ if __FILE__ == $0
   when nil
     Dep::CLI.check
   else
-    abort("error: dep --help for more info")
+    Dep::CLI.abort
   end
 
 end
