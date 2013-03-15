@@ -1,6 +1,6 @@
 require "cutest"
 
-require_relative "../lib/dep"
+load File.expand_path("../../bin/dep", __FILE__)
 
 # Dep::Lib
 scope do
