@@ -192,29 +192,33 @@ NAME
 
 SYNOPSIS
       dep
-      dep add libname [--pre] [-f .gems]
-      dep rm libname [-f .gems]
-      dep install [-f .gems]
+      dep add libname [--pre]
+      dep rm libname
+      dep install
 
 DESCRIPTION
-      check
+      dep
           Checks that all dependencies are met.
 
-      add
-          Fetches the latest version of the library in question
+      dep add [gemname]
+          Fetches the latest version of `gemname`
           and automatically adds it to your .gems file.
 
       rm
-          Simply removes the corresponding entry in your .gems file.
+          Removes the corresponding entry in your .gems file.
 
       install
           Installs all the missing dependencies for you. An important
           point here is that it simply does a `gem install` for each
           dependency you have. Dep assumes that you use some form of
-          sandboxing like RVM or rbenv-gemset.
+          sandboxing like gs, rbenv-gemset or RVM gemsets.
 
 
 INSTALLATION
+      $ wget -qO- http://amakawa.org/sh/install.sh | sh
+
+      # or
+
       $ gem install dep
 
 HISTORY
