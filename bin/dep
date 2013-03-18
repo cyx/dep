@@ -146,42 +146,40 @@ private
   end
 end
 
-if __FILE__ == $0
 
-  Dep::CLI.file = File.join(Dir.pwd, ".gems")
-  Dep::CLI.prerelease = false
+Dep::CLI.file = File.join(Dir.pwd, ".gems")
+Dep::CLI.prerelease = false
 
-  on("-f") do |file|
-    Dep::CLI.file = file
-  end
-
-  on("--pre") do
-    Dep::CLI.prerelease = true
-  end
-
-  on("--help") do
-    IO.popen("less", "w") { |f| f.write(DATA.read) }
-    exit
-  end
-
-  Dep::CLI.list = Dep::List.new(Dep::CLI.file)
-
-  FileUtils.touch(Dep::CLI.list.path) unless File.exist?(Dep::CLI.list.path)
-
-  case ARGV[0]
-  when "add"
-    Dep::CLI.add(ARGV[1])
-  when "rm"
-    Dep::CLI.rm(ARGV[1])
-  when "install", "i"
-    Dep::CLI.install
-  when nil
-    Dep::CLI.check
-  else
-    Dep::CLI.abort
-  end
-
+on("-f") do |file|
+  Dep::CLI.file = file
 end
+
+on("--pre") do
+  Dep::CLI.prerelease = true
+end
+
+on("--help") do
+  IO.popen("less", "w") { |f| f.write(DATA.read) }
+  exit
+end
+
+Dep::CLI.list = Dep::List.new(Dep::CLI.file)
+
+FileUtils.touch(Dep::CLI.list.path) unless File.exist?(Dep::CLI.list.path)
+
+case ARGV[0]
+when "add"
+  Dep::CLI.add(ARGV[1])
+when "rm"
+  Dep::CLI.rm(ARGV[1])
+when "install", "i"
+  Dep::CLI.install
+when nil
+  Dep::CLI.check
+else
+  Dep::CLI.abort
+end
+
 
 __END__
 
