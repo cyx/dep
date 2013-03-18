@@ -174,7 +174,7 @@ when "rm"
   Dep::CLI.rm(ARGV[1])
 when "install", "i"
   Dep::CLI.install
-when nil
+when nil, "check"
   Dep::CLI.check
 else
   Dep::CLI.abort
@@ -189,13 +189,13 @@ NAME
       dep -- Basic dependency tracking
 
 SYNOPSIS
-      dep
+      dep [check]
       dep add libname [--pre]
       dep rm libname
       dep install
 
 DESCRIPTION
-      dep
+      dep [check]
           Checks that all dependencies are met.
 
       dep add [gemname]
