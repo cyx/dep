@@ -146,7 +146,10 @@ private
   end
 end
 
-if __FILE__ == $0
+# So originally, this was just $0 == __FILE__, but
+# since rubygems wraps the actual bin file in a loader
+# script, we have to instead rely on a different condition.
+if File.basename($0) == "dep"
 
   Dep::CLI.file = File.join(Dir.pwd, ".gems")
   Dep::CLI.prerelease = false
@@ -160,7 +163,11 @@ if __FILE__ == $0
   end
 
   on("--help") do
-    IO.popen("less", "w") { |f| f.write(DATA.read) }
+    # I hate this, but since rubygems does a wrapper
+    # script, we can't use the elegance of DATA.read :(
+    help = File.read(__FILE__).split(/^__END__/)[1]
+
+    IO.popen("less", "w") { |f| f.write(help) }
     exit
   end
 
@@ -184,7 +191,6 @@ if __FILE__ == $0
 end
 
 __END__
-
 DEP(1)
 
 NAME
