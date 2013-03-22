@@ -163,8 +163,8 @@ if File.basename($0) == "dep"
   end
 
   on("--help") do
-    # I hate this, but since rubygems does a wrapper
-    # script, we can't use the elegance of DATA.read :(
+
+    # We can't use DATA.read because rubygems does a wrapper script.
     help = File.read(__FILE__).split(/^__END__/)[1]
 
     IO.popen("less", "w") { |f| f.write(help) }
