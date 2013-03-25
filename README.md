@@ -3,24 +3,24 @@ DEP(1) -- basic dependency tracking
 
 ## SYNOPSIS
 
-    dep check
+    dep
     dep add libname [--pre]
     dep rm libname
     dep install
 
 ## DESCRIPTION
 
-   * check:
+   * `dep`:
      Checks that all dependencies are met.
 
-   * add:
+   * `dep add`:
      Fetches the latest version of the library in question
      and automatically adds it to your .gems file.
 
-   * rm:
+   * `dep rm`:
      Simply removes the corresponding entry in your .gems file.
 
-   * install:
+   * `dep install`:
      Installs all the missing dependencies for you. An important
      point here is that it simply does a `gem install` for each
      dependency you have. Dep assumes that you use some form of
