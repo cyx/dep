@@ -40,6 +40,8 @@ module Dep
     def self.[](line)
       if line.strip =~ /^(\S+) -v (\S+)$/
         return new($1, $2)
+      elsif line.strip =~ /^(\S+) --git '?([^']+)'?$/
+        return GitLib.new($1, $2)
       else
         abort("Invalid requirement found: #{line}")
       end
@@ -58,28 +60,64 @@ module Dep
     def ==(other)
       to_s == other.to_s
     end
+
+    def install
+      "gem install #{to_s}"
+    end
+  end
+
+  class GitLib < Lib
+    attr_accessor :uri, :gemspec_path
+
+    def initialize(name, data)
+      self.name = name
+      if data.strip =~ /^(\S+) (\S+)$/
+        @uri = $1
+        @gemspec_path = $2
+      else
+        @uri = data
+        @gemspec_path = nil
+      end
+      self
+    end
+
+    def to_s
+      "#{name} --git #{@gemspec_path ? "'#{@uri} #{@gemspec_path}'" : @uri}"
+    end
+
+    def install
+      tmp_path = "/tmp/dep-#{name}"
+      %{rm -rf #{tmp_path} &&
+        git clone #{uri} #{tmp_path} &&
+        (cd #{tmp_path}/#{@gemspec_path} && gem build #{name}.gemspec) &&
+        gem install `ls #{tmp_path}/#{@gemspec_path}/#{name}-*.gem | head -n 1`}
+    end
   end
 
   module CLI
     class << self
-      attr_accessor :prerelease, :list, :file
+      attr_accessor :prerelease, :list, :file, :git
     end
 
     def self.add(name)
-      dependency = Gem::Dependency.new(name)
-      fetcher = Gem::SpecFetcher.fetcher
-
-      if fetcher.respond_to?(:spec_for_dependency)
-        dependency.prerelease = @prerelease
-        res, _ = fetcher.spec_for_dependency(dependency)
+      if @git
+        lib  = Dep::GitLib.new(name, @git)
       else
-        res = fetcher.fetch(dependency, false, true, @prerelease)
+        dependency = Gem::Dependency.new(name)
+        fetcher = Gem::SpecFetcher.fetcher
+
+        if fetcher.respond_to?(:spec_for_dependency)
+          dependency.prerelease = @prerelease
+          res, _ = fetcher.spec_for_dependency(dependency)
+        else
+          res = fetcher.fetch(dependency, false, true, @prerelease)
+        end
+
+        abort("Unable to find #{name}") if res.empty?
+
+        spec = res[-1][0]
+        lib  = Dep::Lib.new(spec.name, spec.version)
       end
-
-      abort("Unable to find #{name}") if res.empty?
-
-      spec = res[-1][0]
-      lib  = Dep::Lib.new(spec.name, spec.version)
 
       @list.add(lib)
       @list.save
@@ -115,7 +153,7 @@ module Dep
       end
 
       @list.missing_libraries.each do |lib|
-        run "gem install #{lib}"
+        run lib.install
       end
     end
 
@@ -153,6 +191,7 @@ if File.basename($0) == "dep"
 
   Dep::CLI.file = File.join(Dir.pwd, ".gems")
   Dep::CLI.prerelease = false
+  Dep::CLI.git = false
 
   on("-f") do |file|
     Dep::CLI.file = file
@@ -160,6 +199,10 @@ if File.basename($0) == "dep"
 
   on("--pre") do
     Dep::CLI.prerelease = true
+  end
+
+  on("--git") do |git|
+    Dep::CLI.git = git
   end
 
   on("--help") do
@@ -198,7 +241,7 @@ NAME
 
 SYNOPSIS
       dep
-      dep add libname [--pre]
+      dep add libname [--pre]|[--git]
       dep rm libname
       dep install
 
@@ -209,6 +252,9 @@ DESCRIPTION
       dep add [gemname]
           Fetches the latest version of `gemname`
           and automatically adds it to your .gems file.
+
+          If you specify `--git` it will take a git repository followed
+          by a gemspec path if it's different than the repository's root.
 
       rm
           Removes the corresponding entry in your .gems file.
