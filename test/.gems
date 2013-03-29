@@ -1,2 +1,3 @@
 ohm-contrib -v 1.0.rc1 
-  cutest -v 1.2.0
+cutest -v 1.2.0
+padrino-performance --git 'git://github.com/padrino/padrino-framework.git padrino-performance'
