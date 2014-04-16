@@ -116,7 +116,9 @@ module Dep
         exit
       end
 
-      run "gem install #{@list.missing_libraries.join(" ")}"
+      libs = @list.missing_libraries.join(" ")
+
+      run "gem install #{libs} --no-document"
     end
 
     def run(cmd)

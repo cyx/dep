@@ -78,6 +78,6 @@ scope do
   test "install" do |cli, commands|
     cli.install
 
-    assert_equal ["gem install foo:2.0 bar:1.1"], commands
+    assert_equal ["gem install foo:2.0 bar:1.1 --no-document"], commands
   end
 end
