@@ -1,6 +1,11 @@
 require "cutest"
+require "override"
 
 load File.expand_path("../../bin/dep", __FILE__)
+
+class Cutest::Scope
+  include Override
+end
 
 # Dep::Lib
 scope do
@@ -23,7 +28,7 @@ scope do
 
   test "to_s" do
     lib = Dep::Lib.new("cutest", "1.1.3")
-    assert_equal "cutest -v 1.1.3", lib.to_s
+    assert_equal "cutest:1.1.3", lib.to_s
   end
 end
 
@@ -49,5 +54,30 @@ scope do
 
     assert ! list.libraries.include?(Dep::Lib.new("cutest", "1.1.3"))
     assert list.libraries.include?(Dep::Lib.new("cutest", "2.0"))
+  end
+end
+
+# Dep::CLI
+scope do
+  setup do
+    list = Dep::List.new("/dev/null")
+
+    list.add(Dep::Lib.new("foo", "2.0"))
+    list.add(Dep::Lib.new("bar", "1.1"))
+
+    commands = []
+
+    cli = Dep::CLI.new
+    cli.list = list
+
+    override(cli, run: -> args { commands << args })
+
+    [cli, commands]
+  end
+
+  test "install" do |cli, commands|
+    cli.install
+
+    assert_equal ["gem install foo:2.0 bar:1.1"], commands
   end
 end
