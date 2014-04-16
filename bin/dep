@@ -2,6 +2,10 @@
 
 require "fileutils"
 
+def die
+  abort("error: dep --help for more info")
+end
+
 module Dep
   class List
     attr :path
@@ -52,7 +56,7 @@ module Dep
     end
 
     def to_s
-      "#{name} -v #{version}"
+      "#{name}:#{version}"
     end
 
     def ==(other)
@@ -60,12 +64,10 @@ module Dep
     end
   end
 
-  module CLI
-    class << self
-      attr_accessor :prerelease, :list, :file
-    end
+  class CLI
+    attr_accessor :prerelease, :list, :file
 
-    def self.add(name)
+    def add(name)
       dependency = Gem::Dependency.new(name)
       fetcher = Gem::SpecFetcher.fetcher
 
@@ -87,14 +89,14 @@ module Dep
       puts "dep: added #{lib}"
     end
 
-    def self.rm(name)
+    def rm(name)
       @list.remove(Dep::Lib.new(name))
       @list.save
 
       puts "dep: removed #{name}"
     end
 
-    def self.check
+    def check
       if @list.missing_libraries.empty?
         puts "dep: all cool"
       else
@@ -108,24 +110,20 @@ module Dep
       end
     end
 
-    def self.install
+    def install
       if @list.missing_libraries.empty?
         puts "dep: nothing to install"
         exit
       end
 
-      @list.missing_libraries.each do |lib|
-        run "gem install #{lib}"
-      end
+      libs = @list.missing_libraries.join(" ")
+
+      run "gem install #{libs} --no-document"
     end
 
-    def self.run(cmd)
+    def run(cmd)
       puts "  #{cmd}"
       `#{cmd}`
-    end
-
-    def self.abort
-      abort("error: dep --help for more info")
     end
   end
 end
@@ -140,7 +138,7 @@ private
       when 1 then block.call(ARGV.delete_at(index))
       when 0 then block.call
       else
-        Dep::CLI.abort
+        die
       end
     end
   end
@@ -151,15 +149,17 @@ end
 # script, we have to instead rely on a different condition.
 if File.basename($0) == "dep"
 
-  Dep::CLI.file = File.join(Dir.pwd, ".gems")
-  Dep::CLI.prerelease = false
+  cli = Dep::CLI.new
+
+  cli.file = File.join(Dir.pwd, ".gems")
+  cli.prerelease = false
 
   on("-f") do |file|
-    Dep::CLI.file = file
+    cli.file = file
   end
 
   on("--pre") do
-    Dep::CLI.prerelease = true
+    cli.prerelease = true
   end
 
   on("--help") do
@@ -171,21 +171,21 @@ if File.basename($0) == "dep"
     exit
   end
 
-  Dep::CLI.list = Dep::List.new(Dep::CLI.file)
+  cli.list = Dep::List.new(cli.file)
 
-  FileUtils.touch(Dep::CLI.list.path) unless File.exist?(Dep::CLI.list.path)
+  FileUtils.touch(cli.list.path) unless File.exist?(cli.list.path)
 
   case ARGV[0]
   when "add"
-    Dep::CLI.add(ARGV[1])
+    cli.add(ARGV[1])
   when "rm"
-    Dep::CLI.rm(ARGV[1])
+    cli.rm(ARGV[1])
   when "install", "i"
-    Dep::CLI.install
+    cli.install
   when nil
-    Dep::CLI.check
+    cli.check
   else
-    Dep::CLI.abort
+    die
   end
 
 end
