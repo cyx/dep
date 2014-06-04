@@ -125,7 +125,7 @@ module Dep
     end
 
     def self.abort
-      abort("error: dep --help for more info")
+      Kernel::abort("error: dep --help for more info")
     end
   end
 end

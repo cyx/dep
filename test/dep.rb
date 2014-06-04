@@ -51,3 +51,25 @@ scope do
     assert list.libraries.include?(Dep::Lib.new("cutest", "2.0"))
   end
 end
+
+# Dep::CLI
+scope do
+  def silence_unless_raises
+    begin
+      original_stderr = $stderr.clone
+      $stderr.reopen(File.new('/dev/null', 'w'))
+      yield
+    rescue Exception
+      $stderr.reopen(original_stderr)
+      raise
+    ensure
+      $stdout.reopen(original_stderr)
+    end
+  end
+
+  test "abort doesn't raise an exception" do
+    silence_unless_raises do
+      Dep::CLI.abort
+    end
+  end
+end
