@@ -79,7 +79,7 @@ HISTORY
       The manual workflow for that would be:
 
       gem search -r "^ohm$" [--pre] # check and remember the version number
-      echo "ohm:X.x.x" >> .gems
+      echo "ohm -v X.x.x" >> .gems
 
       If you try doing that repeatedly, it will quickly become cumbersome.
 
