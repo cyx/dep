@@ -28,7 +28,7 @@ scope do
 
   test "to_s" do
     lib = Dep::Lib.new("cutest", "1.1.3")
-    assert_equal "cutest:1.1.3", lib.to_s
+    assert_equal "cutest -v 1.1.3", lib.to_s
   end
 end
 
