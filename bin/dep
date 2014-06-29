@@ -40,7 +40,7 @@ module Dep
     end
   end
 
-  class Lib < Struct.new(:name, :version)
+  Lib = Struct.new(:name, :version) do
     def self.[](line)
       if line.strip =~ /^(\S+) -v (\S+)$/
         return new($1, $2)
