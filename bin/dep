@@ -126,6 +126,10 @@ module Dep
     def run(cmd)
       puts "  #{cmd}"
       `#{cmd}`
+
+      if $?.exitstatus != 0
+        exit($?.exitstatus)
+      end
     end
   end
 end
