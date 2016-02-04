@@ -126,6 +126,8 @@ module Dep
     def run(cmd)
       puts "  #{cmd}"
       `#{cmd}`
+
+      exit false if $?.to_i != 0
     end
   end
 end
